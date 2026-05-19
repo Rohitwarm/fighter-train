@@ -1,0 +1,1223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fighter Blueprint</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black: #0a0a0a;
+    --white: #f5f2ee;
+    --red: #e03b2f;
+    --red-dim: #8a1f18;
+    --gold: #c9a84c;
+    --gold-light: #f0d080;
+    --gray: #2a2a2a;
+    --gray-mid: #444;
+    --gray-light: #888;
+    --cream: #f5f2ee;
+    --surface: #141414;
+    --surface2: #1e1e1e;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    overflow-x: hidden;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 40px;
+    height: 60px;
+    background: rgba(10,10,10,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(201,168,76,0.15);
+  }
+  .nav-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: 3px;
+    color: var(--gold);
+  }
+  .nav-links {
+    display: flex; gap: 28px; list-style: none;
+  }
+  .nav-links a {
+    color: var(--gray-light);
+    text-decoration: none;
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    transition: color .2s;
+  }
+  .nav-links a:hover { color: var(--gold); }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center;
+    position: relative;
+    padding: 80px 20px 60px;
+    overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 60% 50% at 50% 60%, rgba(224,59,47,0.12) 0%, transparent 70%),
+      repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(201,168,76,0.04) 39px, rgba(201,168,76,0.04) 40px),
+      repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(201,168,76,0.04) 39px, rgba(201,168,76,0.04) 40px);
+  }
+  .hero-eyebrow {
+    font-size: 11px; letter-spacing: 5px; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 20px;
+    animation: fadeUp .8s ease both;
+  }
+  .hero-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(80px, 18vw, 180px);
+    line-height: 0.85;
+    letter-spacing: -2px;
+    color: var(--white);
+    animation: fadeUp .9s .1s ease both;
+    position: relative;
+  }
+  .hero-title span { color: var(--red); }
+  .hero-sub {
+    font-size: 16px; color: var(--gray-light);
+    margin-top: 28px; max-width: 500px;
+    line-height: 1.7; font-weight: 300;
+    animation: fadeUp .9s .2s ease both;
+  }
+  .hero-scroll {
+    margin-top: 60px;
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+    color: var(--gray-light); font-size: 11px; letter-spacing: 3px;
+    text-transform: uppercase;
+    animation: fadeUp .9s .4s ease both;
+  }
+  .scroll-line {
+    width: 1px; height: 50px;
+    background: linear-gradient(to bottom, var(--gold), transparent);
+    animation: scrollPulse 2s ease-in-out infinite;
+  }
+  .hero-rule {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--gold-light), transparent);
+    opacity: 0.3;
+  }
+
+  /* ── SECTIONS ── */
+  section {
+    padding: 100px 40px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .section-label {
+    font-size: 11px; letter-spacing: 5px; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 14px;
+    display: flex; align-items: center; gap: 14px;
+  }
+  .section-label::after {
+    content: '';
+    flex: 1; height: 1px;
+    background: linear-gradient(to right, rgba(201,168,76,0.4), transparent);
+  }
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(42px, 7vw, 80px);
+    line-height: 0.9; letter-spacing: 1px;
+    margin-bottom: 50px;
+  }
+
+  /* ── RULE BANNER ── */
+  .rule-banner {
+    background: var(--red);
+    padding: 40px 60px;
+    margin: 0 -40px 80px;
+    max-width: none;
+    display: flex; align-items: center; gap: 40px;
+  }
+  .rule-banner-icon {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 80px; line-height: 1;
+    color: rgba(255,255,255,0.2);
+    flex-shrink: 0;
+  }
+  .rule-banner-text h3 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 32px; letter-spacing: 2px;
+    margin-bottom: 6px;
+  }
+  .rule-banner-text p {
+    font-size: 15px; opacity: 0.85; line-height: 1.6;
+  }
+
+  /* ── EXERCISES GRID ── */
+  .ex-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2px;
+    margin-bottom: 60px;
+  }
+  .ex-card {
+    background: var(--surface);
+    padding: 28px 28px 24px;
+    position: relative;
+    overflow: hidden;
+    cursor: default;
+    transition: background .2s;
+  }
+  .ex-card:hover { background: var(--surface2); }
+  .ex-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0;
+    width: 3px; height: 100%;
+    background: var(--gold);
+    transform: scaleY(0); transform-origin: top;
+    transition: transform .3s ease;
+  }
+  .ex-card:hover::before { transform: scaleY(1); }
+  .ex-card.missing::before { background: var(--red); transform: scaleY(1); }
+  .ex-number {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 48px; line-height: 1;
+    color: rgba(201,168,76,0.15);
+    margin-bottom: 10px;
+  }
+  .ex-card.missing .ex-number { color: rgba(224,59,47,0.2); }
+  .ex-name {
+    font-size: 18px; font-weight: 500;
+    margin-bottom: 6px;
+  }
+  .ex-sets {
+    font-size: 12px; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 10px;
+  }
+  .ex-card.missing .ex-sets { color: var(--red); }
+  .ex-desc {
+    font-size: 13px; color: var(--gray-light); line-height: 1.6;
+  }
+  .ex-badge {
+    display: inline-block;
+    font-size: 10px; letter-spacing: 1px; text-transform: uppercase;
+    padding: 3px 8px;
+    background: rgba(224,59,47,0.2);
+    border: 1px solid rgba(224,59,47,0.4);
+    color: #f87;
+    margin-top: 10px;
+  }
+  .ex-upgrade {
+    display: inline-block;
+    font-size: 10px; letter-spacing: 1px; text-transform: uppercase;
+    padding: 3px 8px;
+    background: rgba(201,168,76,0.1);
+    border: 1px solid rgba(201,168,76,0.3);
+    color: var(--gold);
+    margin-top: 10px;
+  }
+
+  /* ── SHOULDER SPLIT ── */
+  .shoulder-split {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 2px;
+    margin-bottom: 60px;
+  }
+  .shoulder-day {
+    background: var(--surface);
+    padding: 32px;
+  }
+  .day-letter {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 60px; line-height: 1;
+    margin-bottom: 16px;
+  }
+  .day-a .day-letter { color: var(--gold); }
+  .day-b .day-letter { color: var(--red); }
+  .shoulder-move {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    font-size: 14px;
+  }
+  .shoulder-move::before {
+    content: '—';
+    color: var(--gold-light);
+    font-size: 12px;
+  }
+  .day-b .shoulder-move::before { color: var(--red); }
+
+  /* ── BOXING ── */
+  .boxing-phases {
+    display: flex; flex-direction: column; gap: 2px;
+    margin-bottom: 60px;
+  }
+  .phase-card {
+    background: var(--surface);
+    padding: 36px 40px;
+    display: grid;
+    grid-template-columns: 160px 1fr;
+    gap: 40px;
+    align-items: start;
+    transition: background .2s;
+  }
+  .phase-card:hover { background: var(--surface2); }
+  .phase-label {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 13px; letter-spacing: 4px;
+    color: var(--gold);
+  }
+  .phase-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 72px; line-height: 1;
+    color: rgba(201,168,76,0.12);
+    margin-top: -10px;
+  }
+  .phase-title {
+    font-size: 22px; font-weight: 500; margin-bottom: 8px;
+  }
+  .phase-detail {
+    font-size: 13px; color: var(--gray-light); line-height: 1.8;
+  }
+  .phase-tags {
+    display: flex; flex-wrap: wrap; gap: 6px; margin-top: 14px;
+  }
+  .phase-tag {
+    font-size: 10px; letter-spacing: 1px; text-transform: uppercase;
+    padding: 4px 10px;
+    border: 1px solid rgba(201,168,76,0.25);
+    color: var(--gold-light);
+  }
+
+  /* ── BOXING TECHNIQUES SVG visual ── */
+  .boxing-visual {
+    background: var(--surface);
+    padding: 50px;
+    margin-bottom: 60px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .boxing-visual h3 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px; letter-spacing: 3px;
+    margin-bottom: 32px; color: var(--gold);
+  }
+
+  /* ── SCHEDULE ── */
+  .week-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 2px;
+    margin-bottom: 60px;
+  }
+  .week-day {
+    background: var(--surface);
+    padding: 20px 16px;
+    min-height: 180px;
+    display: flex; flex-direction: column;
+  }
+  .week-day.rest-day {
+    background: #0e0e0e;
+    opacity: 0.6;
+  }
+  .wday-name {
+    font-size: 10px; letter-spacing: 3px; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 14px;
+  }
+  .rest-day .wday-name { color: var(--gray-light); }
+  .wday-pill {
+    font-size: 10px; letter-spacing: 0.5px;
+    padding: 5px 8px;
+    margin-bottom: 5px;
+    border-left: 2px solid;
+  }
+  .wday-pill.workout { border-color: var(--gold); background: rgba(201,168,76,0.07); }
+  .wday-pill.boxing { border-color: var(--red); background: rgba(224,59,47,0.07); }
+  .wday-pill.light { border-color: #4a8a5a; background: rgba(74,138,90,0.07); }
+  .wday-pill.cardio { border-color: #5a7aaa; background: rgba(90,122,170,0.07); }
+  .wday-rest-text {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px; color: var(--gray-mid);
+    margin-top: auto;
+  }
+
+  /* ── DIET ── */
+  .diet-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+    margin-bottom: 60px;
+  }
+  .diet-card {
+    background: var(--surface);
+    padding: 36px;
+  }
+  .diet-icon {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 42px;
+    color: var(--gold-light);
+    margin-bottom: 12px;
+  }
+  .diet-title {
+    font-size: 18px; font-weight: 500; margin-bottom: 8px;
+  }
+  .diet-desc { font-size: 13px; color: var(--gray-light); line-height: 1.7; }
+  .diet-list { list-style: none; margin-top: 14px; }
+  .diet-list li {
+    font-size: 13px; color: var(--gray-light);
+    padding: 6px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .diet-list li::before { content: '↗'; color: var(--gold); font-size: 12px; }
+
+  /* ── RECOMP METER ── */
+  .recomp {
+    background: var(--surface);
+    padding: 50px 40px;
+    margin-bottom: 60px;
+    text-align: center;
+  }
+  .recomp-label {
+    font-size: 11px; letter-spacing: 4px; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 24px;
+  }
+  .recomp-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 56px; margin-bottom: 8px;
+  }
+  .recomp-sub { font-size: 14px; color: var(--gray-light); margin-bottom: 40px; }
+  .recomp-bars { display: grid; grid-template-columns: repeat(3,1fr); gap: 24px; }
+  .rbar-wrap { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+  .rbar-label { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--gray-light); }
+  .rbar-track {
+    width: 4px; height: 100px;
+    background: rgba(255,255,255,0.06);
+    position: relative;
+    border-radius: 2px;
+  }
+  .rbar-fill {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    border-radius: 2px;
+    transition: height 1.5s ease;
+  }
+  .rbar-val {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px; color: var(--white);
+  }
+
+  /* ── AVOIDS ── */
+  .avoid-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 2px;
+    margin-bottom: 60px;
+  }
+  .avoid-card {
+    background: var(--surface);
+    padding: 28px;
+    border-top: 2px solid var(--red);
+    position: relative;
+    overflow: hidden;
+  }
+  .avoid-card::after {
+    content: '✕';
+    position: absolute; top: 16px; right: 20px;
+    font-size: 12px; color: rgba(224,59,47,0.5);
+  }
+  .avoid-title { font-size: 16px; font-weight: 500; margin-bottom: 8px; }
+  .avoid-desc { font-size: 13px; color: var(--gray-light); line-height: 1.6; }
+
+  /* ── TIPS ── */
+  .tips-list {
+    display: flex; flex-direction: column; gap: 2px;
+    margin-bottom: 60px;
+  }
+  .tip-row-card {
+    background: var(--surface);
+    padding: 28px 36px;
+    display: flex; align-items: flex-start; gap: 28px;
+    transition: background .2s;
+  }
+  .tip-row-card:hover { background: var(--surface2); }
+  .tip-index {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 44px; color: rgba(201,168,76,0.15);
+    flex-shrink: 0; line-height: 1; min-width: 48px;
+  }
+  .tip-content { flex: 1; }
+  .tip-title { font-size: 16px; font-weight: 500; margin-bottom: 6px; }
+  .tip-body { font-size: 13px; color: var(--gray-light); line-height: 1.6; }
+
+  /* ── 6 MONTHS TIMELINE ── */
+  .timeline {
+    position: relative;
+    margin-bottom: 80px;
+  }
+  .timeline-spine {
+    position: absolute;
+    left: 28px; top: 0; bottom: 0; width: 1px;
+    background: linear-gradient(to bottom, var(--gold), transparent);
+  }
+  .timeline-month {
+    padding: 0 0 48px 72px;
+    position: relative;
+  }
+  .timeline-dot {
+    position: absolute; left: 20px; top: 4px;
+    width: 16px; height: 16px;
+    border: 2px solid var(--gold);
+    background: var(--black);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .timeline-dot::after {
+    content: '';
+    width: 6px; height: 6px;
+    background: var(--gold);
+    border-radius: 50%;
+  }
+  .timeline-mo {
+    font-size: 10px; letter-spacing: 4px; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 8px;
+  }
+  .timeline-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 32px; margin-bottom: 8px;
+  }
+  .timeline-body {
+    font-size: 13px; color: var(--gray-light); line-height: 1.7;
+    max-width: 600px;
+  }
+  .timeline-goals {
+    display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px;
+  }
+  .timeline-goal {
+    font-size: 11px; padding: 4px 12px;
+    background: rgba(201,168,76,0.08);
+    border: 1px solid rgba(201,168,76,0.2);
+    color: var(--gold-light);
+    letter-spacing: 0.5px;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid rgba(255,255,255,0.06);
+    text-align: center;
+    padding: 50px 40px;
+  }
+  .footer-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 48px; letter-spacing: 6px;
+    color: rgba(201,168,76,0.3);
+    margin-bottom: 14px;
+  }
+  footer p {
+    font-size: 12px; color: var(--gray-mid); letter-spacing: 1px;
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes scrollPulse {
+    0%, 100% { opacity: 0.4; transform: scaleY(0.8); }
+    50%       { opacity: 1;   transform: scaleY(1); }
+  }
+  .reveal {
+    opacity: 0; transform: translateY(24px);
+    transition: opacity .7s ease, transform .7s ease;
+  }
+  .reveal.visible {
+    opacity: 1; transform: translateY(0);
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    nav { padding: 0 20px; }
+    .nav-links { display: none; }
+    section { padding: 70px 20px; }
+    .rule-banner { margin: 0 -20px 60px; padding: 30px 24px; flex-direction: column; gap: 20px; }
+    .shoulder-split { grid-template-columns: 1fr; }
+    .diet-grid { grid-template-columns: 1fr; }
+    .week-grid { grid-template-columns: repeat(4, 1fr); }
+    .phase-card { grid-template-columns: 1fr; gap: 10px; }
+    .recomp-bars { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 600px) {
+    .week-grid { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">Fighter Blueprint</div>
+  <ul class="nav-links">
+    <li><a href="#exercises">Exercises</a></li>
+    <li><a href="#boxing">Boxing</a></li>
+    <li><a href="#schedule">Schedule</a></li>
+    <li><a href="#diet">Diet</a></li>
+    <li><a href="#avoids">Avoids</a></li>
+    <li><a href="#tips">Tips</a></li>
+    <li><a href="#timeline">6 Months</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-bg"></div>
+  <p class="hero-eyebrow">Your 6-month fighter program</p>
+  <h1 class="hero-title">FIGHTER<br><span>BLUE</span>PRINT</h1>
+  <p class="hero-sub">Fighter conditioning · Functional hypertrophy · Combat endurance. You accidentally built something great — now let's optimize it.</p>
+  <div class="hero-scroll">
+    <div class="scroll-line"></div>
+    Scroll to train
+  </div>
+  <div class="hero-rule"></div>
+</div>
+
+<!-- ── EXERCISES ── -->
+<section id="exercises">
+  <div class="section-label">01 — Training</div>
+  <h2 class="section-title">THE<br>EXERCISES</h2>
+
+  <div class="rule-banner reveal">
+    <div class="rule-banner-icon">!</div>
+    <div class="rule-banner-text">
+      <h3>Core Fighter Rule</h3>
+      <p>Use <strong>controlled intensity</strong> — not "destroy myself daily". Train 3 rounds with 60–90 sec rest between. This becomes conditioning on its own.</p>
+    </div>
+  </div>
+
+  <div class="section-label reveal">Push & upper body</div>
+  <div class="ex-grid reveal">
+    <div class="ex-card">
+      <div class="ex-number">01</div>
+      <div class="ex-name">Pushups</div>
+      <div class="ex-sets">15–20 reps · 3 rounds</div>
+      <div class="ex-desc">Full range of motion. Tight core throughout. Controlled descent — no flopping. Later progress to explosive pushups.</div>
+      <span class="ex-upgrade">Upgrade → Explosive pushups</span>
+    </div>
+    <div class="ex-card">
+      <div class="ex-number">02</div>
+      <div class="ex-name">Bicep Curl</div>
+      <div class="ex-sets">12–15 reps · 3 rounds</div>
+      <div class="ex-desc">Biceps are secondary in combat. No need to go to failure daily — controlled reps protect your recovery capacity for boxing.</div>
+    </div>
+    <div class="ex-card">
+      <div class="ex-number">03</div>
+      <div class="ex-name">Tricep Overhead Extension</div>
+      <div class="ex-sets">12–15 reps · 3 rounds</div>
+      <div class="ex-desc">Critical for boxers — punch extension is almost entirely tricep-driven. The jab, the cross, the hook all depend on this muscle.</div>
+    </div>
+    <div class="ex-card missing">
+      <div class="ex-number">ADD</div>
+      <div class="ex-name">Pullups or Dumbbell Rows</div>
+      <div class="ex-sets">8–12 reps · 3 rounds</div>
+      <div class="ex-desc">Currently missing from your routine. Without pull movements, too much pushing creates rounded shoulders and imbalance that hurts your guard.</div>
+      <span class="ex-badge">⚠ Critical Gap — Add Now</span>
+    </div>
+  </div>
+
+  <div class="section-label reveal">Shoulders — rotate A/B</div>
+  <div class="shoulder-split reveal">
+    <div class="shoulder-day day-a">
+      <div class="day-letter">A</div>
+      <div class="shoulder-move">Shoulder Press</div>
+      <div class="shoulder-move">Side Raise</div>
+    </div>
+    <div class="shoulder-day day-b">
+      <div class="day-letter">B</div>
+      <div class="shoulder-move">Rear Delt Fly</div>
+      <div class="shoulder-move">Front Raise</div>
+    </div>
+  </div>
+  <p class="reveal" style="font-size:13px;color:var(--gray-light);margin-bottom:60px;max-width:600px">Doing all three shoulder planes daily causes overuse. Rotating A/B gives each angle recovery time while keeping frequency high enough for boxing guard strength.</p>
+
+  <div class="section-label reveal">Core & conditioning</div>
+  <div class="ex-grid reveal">
+    <div class="ex-card">
+      <div class="ex-number">04</div>
+      <div class="ex-name">Plank</div>
+      <div class="ex-sets">Build to 90 seconds</div>
+      <div class="ex-desc">Progress gradually: 40 sec → 1 min → 90 sec. Anti-rotation stability from planks directly transfers to a stable boxing base.</div>
+    </div>
+    <div class="ex-card">
+      <div class="ex-number">05</div>
+      <div class="ex-name">Sit-ups → Upgrade</div>
+      <div class="ex-sets">20–30 reps</div>
+      <div class="ex-desc">Good start. Later upgrade to leg raises, Russian twists, and bicycle crunches — they train the rotational core that powers hooks and uppercuts.</div>
+      <span class="ex-upgrade">Upgrade → Russian twists</span>
+    </div>
+    <div class="ex-card">
+      <div class="ex-number">06</div>
+      <div class="ex-name">Mountain Climbers</div>
+      <div class="ex-sets">30–40 reps (→ timed 30 sec)</div>
+      <div class="ex-desc">Excellent fighter conditioning exercise. Combines core stability with cardio demand. Later move to timed rounds for metabolic conditioning.</div>
+    </div>
+    <div class="ex-card">
+      <div class="ex-number">07</div>
+      <div class="ex-name">Squats</div>
+      <div class="ex-sets">20–25 reps · 3 rounds</div>
+      <div class="ex-desc">Fighter legs need both strength and explosive capacity. Later add jump squats and lunges to develop the power needed for offensive bursts.</div>
+      <span class="ex-upgrade">Upgrade → Jump squats + Lunges</span>
+    </div>
+  </div>
+
+  <div class="section-label reveal">Add these over time</div>
+  <div class="ex-grid reveal">
+    <div class="ex-card">
+      <div class="ex-number">+1</div>
+      <div class="ex-name">Jump Rope</div>
+      <div class="ex-sets">5–10 min daily</div>
+      <div class="ex-desc">The single best daily add-on. Massively improves footwork rhythm, timing, and fight-pace stamina. Start week 2.</div>
+    </div>
+    <div class="ex-card">
+      <div class="ex-number">+2</div>
+      <div class="ex-name">Running</div>
+      <div class="ex-sets">2–3 times per week</div>
+      <div class="ex-desc">Best exercise for fight stamina. Builds the aerobic base that keeps you calm in round 3. Start with 20 min easy pace, build from there.</div>
+    </div>
+    <div class="ex-card">
+      <div class="ex-number">+3</div>
+      <div class="ex-name">Sprint Intervals</div>
+      <div class="ex-sets">Add at month 2+</div>
+      <div class="ex-desc">Explosive cardio that simulates fight bursts. Add only after you've built the aerobic base through running. 8 × 20 sec all-out sprints.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ── BOXING ── -->
+<section id="boxing" style="background: var(--surface); max-width: none; padding: 100px 0;">
+  <div style="max-width: 1200px; margin: 0 auto; padding: 0 40px;">
+    <div class="section-label reveal">02 — Skill</div>
+    <h2 class="section-title reveal">BOXING<br>TECHNIQUES</h2>
+
+    <!-- SVG stance diagram -->
+    <div class="boxing-visual reveal">
+      <h3>Orthodox Stance & Guard</h3>
+      <svg width="100%" viewBox="0 0 700 320" style="max-width:700px">
+        <!-- body silhouette -->
+        <!-- feet -->
+        <ellipse cx="240" cy="295" rx="38" ry="10" fill="rgba(201,168,76,0.15)" stroke="rgba(201,168,76,0.4)" stroke-width="1"/>
+        <ellipse cx="380" cy="295" rx="38" ry="10" fill="rgba(201,168,76,0.15)" stroke="rgba(201,168,76,0.4)" stroke-width="1"/>
+        <text x="240" y="315" text-anchor="middle" font-family="DM Sans" font-size="10" fill="rgba(201,168,76,0.7)" letter-spacing="1">LEAD (LEFT)</text>
+        <text x="380" y="315" text-anchor="middle" font-family="DM Sans" font-size="10" fill="rgba(201,168,76,0.7)" letter-spacing="1">REAR (RIGHT)</text>
+
+        <!-- legs -->
+        <line x1="240" y1="285" x2="300" y2="200" stroke="rgba(245,242,238,0.25)" stroke-width="12" stroke-linecap="round"/>
+        <line x1="380" y1="285" x2="320" y2="200" stroke="rgba(245,242,238,0.25)" stroke-width="12" stroke-linecap="round"/>
+
+        <!-- torso -->
+        <rect x="268" y="130" width="74" height="80" rx="6" fill="rgba(245,242,238,0.12)" stroke="rgba(245,242,238,0.2)" stroke-width="1"/>
+
+        <!-- shoulder line -->
+        <line x1="268" y1="140" x2="342" y2="140" stroke="rgba(245,242,238,0.3)" stroke-width="2"/>
+
+        <!-- arms -->
+        <!-- lead arm (left guard) -->
+        <line x1="268" y1="148" x2="220" y2="110" stroke="rgba(224,59,47,0.8)" stroke-width="10" stroke-linecap="round"/>
+        <circle cx="214" cy="105" r="14" fill="none" stroke="rgba(224,59,47,0.9)" stroke-width="2"/>
+        <text x="186" y="84" font-family="DM Sans" font-size="11" fill="rgba(224,59,47,0.9)" letter-spacing="1">LEAD GUARD</text>
+        <text x="186" y="98" font-family="DM Sans" font-size="10" fill="rgba(201,168,76,0.6)">JAB hand</text>
+
+        <!-- rear arm -->
+        <line x1="342" y1="148" x2="375" y2="108" stroke="rgba(245,242,238,0.5)" stroke-width="10" stroke-linecap="round"/>
+        <circle cx="382" cy="102" r="14" fill="none" stroke="rgba(245,242,238,0.7)" stroke-width="2"/>
+        <text x="402" y="88" font-family="DM Sans" font-size="11" fill="rgba(245,242,238,0.8)" letter-spacing="1">REAR GUARD</text>
+        <text x="402" y="102" font-family="DM Sans" font-size="10" fill="rgba(201,168,76,0.6)">CROSS hand</text>
+
+        <!-- head -->
+        <circle cx="305" cy="100" r="30" fill="rgba(245,242,238,0.1)" stroke="rgba(245,242,238,0.25)" stroke-width="1.5"/>
+        <text x="305" y="96" text-anchor="middle" font-family="DM Sans" font-size="10" fill="rgba(245,242,238,0.5)">CHIN</text>
+        <text x="305" y="108" text-anchor="middle" font-family="DM Sans" font-size="9" fill="rgba(245,242,238,0.3)">tucked</text>
+
+        <!-- footwork angle arrow -->
+        <path d="M240 285 Q310 270 380 285" fill="none" stroke="rgba(201,168,76,0.3)" stroke-width="1" stroke-dasharray="4 3"/>
+        <text x="310" y="270" text-anchor="middle" font-family="DM Sans" font-size="9" fill="rgba(201,168,76,0.5)">shoulder width + half step</text>
+
+        <!-- weight distribution -->
+        <text x="100" y="200" font-family="Bebas Neue" font-size="36" fill="rgba(201,168,76,0.12)">60%</text>
+        <text x="95" y="218" font-family="DM Sans" font-size="10" fill="rgba(201,168,76,0.4)">rear weight</text>
+        <text x="480" y="200" font-family="Bebas Neue" font-size="36" fill="rgba(201,168,76,0.12)">40%</text>
+        <text x="482" y="218" font-family="DM Sans" font-size="10" fill="rgba(201,168,76,0.4)">front weight</text>
+
+        <!-- center line -->
+        <line x1="305" y1="60" x2="305" y2="290" stroke="rgba(255,255,255,0.04)" stroke-width="1" stroke-dasharray="4 4"/>
+      </svg>
+    </div>
+
+    <!-- Punch combo visual -->
+    <div class="boxing-visual reveal">
+      <h3>Basic Combinations — Phase 1</h3>
+      <svg width="100%" viewBox="0 0 700 200" style="max-width:700px">
+        <defs>
+          <marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+            <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round"/>
+          </marker>
+        </defs>
+
+        <!-- Combo 1 -->
+        <text x="80" y="30" text-anchor="middle" font-family="Bebas Neue" font-size="13" fill="rgba(201,168,76,0.6)" letter-spacing="3">COMBO 1</text>
+        <circle cx="40" cy="80" r="28" fill="rgba(224,59,47,0.15)" stroke="rgba(224,59,47,0.6)" stroke-width="1.5"/>
+        <text x="40" y="76" text-anchor="middle" font-family="Bebas Neue" font-size="18" fill="#e03b2f">1</text>
+        <text x="40" y="90" text-anchor="middle" font-family="DM Sans" font-size="9" fill="rgba(201,168,76,0.8)">JAB</text>
+        <line x1="70" y1="80" x2="100" y2="80" stroke="rgba(201,168,76,0.4)" stroke-width="1.5" marker-end="url(#arr)"/>
+        <circle cx="130" cy="80" r="28" fill="rgba(245,242,238,0.06)" stroke="rgba(245,242,238,0.4)" stroke-width="1.5"/>
+        <text x="130" y="76" text-anchor="middle" font-family="Bebas Neue" font-size="18" fill="var(--white)">2</text>
+        <text x="130" y="90" text-anchor="middle" font-family="DM Sans" font-size="9" fill="rgba(201,168,76,0.8)">CROSS</text>
+        <text x="80" y="130" text-anchor="middle" font-family="DM Sans" font-size="10" fill="rgba(201,168,76,0.5)">Master this first</text>
+
+        <!-- Combo 2 -->
+        <text x="310" y="30" text-anchor="middle" font-family="Bebas Neue" font-size="13" fill="rgba(201,168,76,0.6)" letter-spacing="3">COMBO 2</text>
+        <circle cx="230" cy="80" r="28" fill="rgba(224,59,47,0.15)" stroke="rgba(224,59,47,0.6)" stroke-width="1.5"/>
+        <text x="230" y="76" text-anchor="middle" font-family="Bebas Neue" font-size="18" fill="#e03b2f">1</text>
+        <text x="230" y="90" text-anchor="middle" font-family="DM Sans" font-size="9" fill="rgba(201,168,76,0.8)">JAB</text>
+        <line x1="260" y1="80" x2="290" y2="80" stroke="rgba(201,168,76,0.4)" stroke-width="1.5" marker-end="url(#arr)"/>
+        <circle cx="320" cy="80" r="28" fill="rgba(245,242,238,0.06)" stroke="rgba(245,242,238,0.4)" stroke-width="1.5"/>
+        <text x="320" y="76" text-anchor="middle" font-family="Bebas Neue" font-size="18" fill="var(--white)">2</text>
+        <text x="320" y="90" text-anchor="middle" font-family="DM Sans" font-size="9" fill="rgba(201,168,76,0.8)">CROSS</text>
+        <line x1="350" y1="80" x2="380" y2="80" stroke="rgba(201,168,76,0.4)" stroke-width="1.5" marker-end="url(#arr)"/>
+        <circle cx="410" cy="80" r="28" fill="rgba(90,122,170,0.15)" stroke="rgba(90,122,170,0.6)" stroke-width="1.5"/>
+        <text x="410" y="76" text-anchor="middle" font-family="Bebas Neue" font-size="18" fill="#7aacee">3</text>
+        <text x="410" y="90" text-anchor="middle" font-family="DM Sans" font-size="9" fill="rgba(201,168,76,0.8)">HOOK</text>
+        <text x="320" y="130" text-anchor="middle" font-family="DM Sans" font-size="10" fill="rgba(201,168,76,0.5)">Add in week 3–4</text>
+
+        <!-- Defense visual -->
+        <text x="600" y="30" text-anchor="middle" font-family="Bebas Neue" font-size="13" fill="rgba(201,168,76,0.6)" letter-spacing="3">DEFENSE</text>
+        <circle cx="560" cy="80" r="28" fill="rgba(74,138,90,0.15)" stroke="rgba(74,138,90,0.6)" stroke-width="1.5"/>
+        <text x="560" y="75" text-anchor="middle" font-family="DM Sans" font-size="8" fill="#7ac88a" letter-spacing="0.5">SLIP</text>
+        <circle cx="640" cy="80" r="28" fill="rgba(74,138,90,0.15)" stroke="rgba(74,138,90,0.6)" stroke-width="1.5"/>
+        <text x="640" y="75" text-anchor="middle" font-family="DM Sans" font-size="8" fill="#7ac88a" letter-spacing="0.5">ROLL</text>
+        <path d="M560 108 Q600 140 640 108" fill="none" stroke="rgba(74,138,90,0.4)" stroke-width="1.5" stroke-dasharray="3 3"/>
+        <text x="600" y="150" text-anchor="middle" font-family="DM Sans" font-size="10" fill="rgba(201,168,76,0.5)">Drill daily</text>
+      </svg>
+    </div>
+
+    <div class="boxing-phases reveal">
+      <div class="phase-card">
+        <div>
+          <div class="phase-label">Month 1</div>
+          <div class="phase-num">01</div>
+        </div>
+        <div>
+          <div class="phase-title">Foundations — Form Before Force</div>
+          <div class="phase-detail">3–5 rounds of shadowboxing at 2–3 min each. Focus on movement, guard position, jab, and cross. Speed comes later — form first. Add 5–10 min of footwork drills: forward, backward, angles, pivot. Practice slips, rolls, and guard recovery daily.</div>
+          <div class="phase-tags">
+            <span class="phase-tag">Shadowboxing</span>
+            <span class="phase-tag">Guard</span>
+            <span class="phase-tag">Jab + Cross</span>
+            <span class="phase-tag">Footwork</span>
+            <span class="phase-tag">Slips</span>
+          </div>
+        </div>
+      </div>
+      <div class="phase-card">
+        <div>
+          <div class="phase-label">Month 2–3</div>
+          <div class="phase-num">02</div>
+        </div>
+        <div>
+          <div class="phase-title">Combinations & Defence</div>
+          <div class="phase-detail">Begin 1–2–3 combinations (jab-cross-hook). Work on head movement in combinations. Introduce the uppercut. Start developing counter-punching: slip then jab, roll then cross. Bag work begins if available.</div>
+          <div class="phase-tags">
+            <span class="phase-tag">1-2-3 Combos</span>
+            <span class="phase-tag">Uppercut</span>
+            <span class="phase-tag">Head movement</span>
+            <span class="phase-tag">Counter-punching</span>
+            <span class="phase-tag">Bag work</span>
+          </div>
+        </div>
+      </div>
+      <div class="phase-card">
+        <div>
+          <div class="phase-label">Month 4–6</div>
+          <div class="phase-num">03</div>
+        </div>
+        <div>
+          <div class="phase-title">Speed, Power & Sparring Readiness</div>
+          <div class="phase-detail">Full combination chains. Timed rounds at fight pace (3 min on, 1 min off). Speed development through pad work if accessible. Sparring preparation: controlled light sparring with focus on defence and range control.</div>
+          <div class="phase-tags">
+            <span class="phase-tag">Speed work</span>
+            <span class="phase-tag">Timed rounds</span>
+            <span class="phase-tag">Pad work</span>
+            <span class="phase-tag">Light sparring</span>
+            <span class="phase-tag">Range control</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── SCHEDULE ── -->
+<section id="schedule">
+  <div class="section-label reveal">03 — Planning</div>
+  <h2 class="section-title reveal">WEEKLY<br>SCHEDULE</h2>
+  <div class="week-grid reveal">
+    <div class="week-day">
+      <div class="wday-name">Monday</div>
+      <div class="wday-pill workout">Workout A</div>
+      <div class="wday-pill boxing">Boxing</div>
+      <div class="wday-pill cardio">Jump rope</div>
+    </div>
+    <div class="week-day">
+      <div class="wday-name">Tuesday</div>
+      <div class="wday-pill workout">Workout B</div>
+      <div class="wday-pill boxing">Boxing</div>
+      <div class="wday-pill cardio">Run 20 min</div>
+    </div>
+    <div class="week-day">
+      <div class="wday-name">Wednesday</div>
+      <div class="wday-pill light">Light workout</div>
+      <div class="wday-pill light">Technique</div>
+      <div class="wday-pill light">Mobility</div>
+    </div>
+    <div class="week-day">
+      <div class="wday-name">Thursday</div>
+      <div class="wday-pill workout">Workout A</div>
+      <div class="wday-pill boxing">Boxing</div>
+      <div class="wday-pill cardio">Jump rope</div>
+    </div>
+    <div class="week-day">
+      <div class="wday-name">Friday</div>
+      <div class="wday-pill workout">Workout B</div>
+      <div class="wday-pill boxing">Boxing</div>
+      <div class="wday-pill cardio">Hard conditioning</div>
+    </div>
+    <div class="week-day">
+      <div class="wday-name">Saturday</div>
+      <div class="wday-pill light">Light boxing</div>
+      <div class="wday-pill light">Mobility</div>
+      <div class="wday-pill cardio">Run 30 min</div>
+    </div>
+    <div class="week-day rest-day">
+      <div class="wday-name">Sunday</div>
+      <div class="wday-rest-text">REST</div>
+    </div>
+  </div>
+  <p class="reveal" style="font-size:13px;color:var(--gray-light);max-width:600px">Sunday rest is non-negotiable. Recovery is when adaptation happens — skipping rest days slows progress, doesn't accelerate it.</p>
+</section>
+
+<!-- ── DIET ── -->
+<section id="diet" style="background: var(--surface); max-width:none; padding: 100px 0;">
+  <div style="max-width:1200px;margin:0 auto;padding:0 40px;">
+    <div class="section-label reveal">04 — Nutrition</div>
+    <h2 class="section-title reveal">FIGHTER<br>DIET</h2>
+
+    <div class="recomp reveal">
+      <div class="recomp-label">Your goal</div>
+      <div class="recomp-title">RECOMPOSITION</div>
+      <div class="recomp-sub">Not bulking. Not cutting. All three simultaneously.</div>
+      <div class="recomp-bars">
+        <div class="rbar-wrap">
+          <div class="rbar-val">↓</div>
+          <div class="rbar-track">
+            <div class="rbar-fill" style="height:55%;background:linear-gradient(to top,#e03b2f,#ff6b5b)"></div>
+          </div>
+          <div class="rbar-label">Fat loss</div>
+        </div>
+        <div class="rbar-wrap">
+          <div class="rbar-val">↑</div>
+          <div class="rbar-track">
+            <div class="rbar-fill" style="height:70%;background:linear-gradient(to top,var(--gold),var(--gold-light))"></div>
+          </div>
+          <div class="rbar-label">Muscle gain</div>
+        </div>
+        <div class="rbar-wrap">
+          <div class="rbar-val">↑</div>
+          <div class="rbar-track">
+            <div class="rbar-fill" style="height:85%;background:linear-gradient(to top,#4a8a5a,#7ac88a)"></div>
+          </div>
+          <div class="rbar-label">Stamina</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="diet-grid reveal">
+      <div class="diet-card">
+        <div class="diet-icon">PROTEIN</div>
+        <div class="diet-title">Daily protein — non-negotiable</div>
+        <div class="diet-desc">Protein is what rebuilds muscle between sessions. Without it, you're training hard and repairing slowly.</div>
+        <ul class="diet-list">
+          <li>Eggs (whole) — cheap, complete amino profile</li>
+          <li>Chicken / lean beef — high density sources</li>
+          <li>Greek yoghurt — convenient, good post-session</li>
+          <li>Lentils / chickpeas — plant-based option</li>
+          <li>Fish (tuna, salmon) — protein + omega-3</li>
+        </ul>
+      </div>
+      <div class="diet-card">
+        <div class="diet-icon">CARBS</div>
+        <div class="diet-title">Fuel your training — quality carbs</div>
+        <div class="diet-desc">Carbs power your boxing sessions. Don't cut them — just choose quality sources timed around training.</div>
+        <ul class="diet-list">
+          <li>Rice — staple energy source, easy to portion</li>
+          <li>Oats — slow-release, great pre-training</li>
+          <li>Sweet potato — nutrient-dense fuel</li>
+          <li>Fruit (banana, apple) — fast energy + micronutrients</li>
+          <li>Whole wheat bread — practical, convenient</li>
+        </ul>
+      </div>
+      <div class="diet-card">
+        <div class="diet-icon">HYDRATION</div>
+        <div class="diet-title">Water — more than you think</div>
+        <div class="diet-desc">Boxing dehydrates heavily. Even mild dehydration kills speed, reaction time, and punch power.</div>
+        <ul class="diet-list">
+          <li>Drink 500ml before training</li>
+          <li>Sip continuously during sessions</li>
+          <li>Rehydrate fully within 1 hour post-session</li>
+          <li>Coconut water for electrolytes on hard days</li>
+        </ul>
+      </div>
+      <div class="diet-card">
+        <div class="diet-icon">TIMING</div>
+        <div class="diet-title">When to eat</div>
+        <div class="diet-desc">Nutrient timing matters for recomposition. Getting this right amplifies everything else.</div>
+        <ul class="diet-list">
+          <li>Pre-session: carbs + small protein 60–90 min before</li>
+          <li>Post-session: protein + fast carbs within 40 min</li>
+          <li>Before bed: slow protein (cottage cheese, eggs)</li>
+          <li>Don't train fasted — it limits power output</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── AVOIDS ── -->
+<section id="avoids">
+  <div class="section-label reveal">05 — Mistakes</div>
+  <h2 class="section-title reveal">WHAT TO<br>AVOID</h2>
+  <div class="avoid-grid reveal">
+    <div class="avoid-card">
+      <div class="avoid-title">Training to failure daily</div>
+      <div class="avoid-desc">Causes nervous system fatigue, slower punches, shoulder exhaustion, and poor recovery. Use controlled intensity — stop 2 reps before failure.</div>
+    </div>
+    <div class="avoid-card">
+      <div class="avoid-title">All shoulders every day</div>
+      <div class="avoid-desc">Front raise + side raise + rear delt all together daily overfatigues the shoulder joint. Boxing requires shoulder endurance — protect it with A/B rotation.</div>
+    </div>
+    <div class="avoid-card">
+      <div class="avoid-title">Skipping pull movements</div>
+      <div class="avoid-desc">An all-push routine creates rounded shoulders and imbalance. This is the biggest structural flaw in your current routine — fix it immediately.</div>
+    </div>
+    <div class="avoid-card">
+      <div class="avoid-title">Bulking phase</div>
+      <div class="avoid-desc">Extra bodyweight slows footwork and hurts your cardio. You should recompose, not bulk. Lean and fast beats heavy and strong for combat sports.</div>
+    </div>
+    <div class="avoid-card">
+      <div class="avoid-title">Chasing maximum muscle</div>
+      <div class="avoid-desc">Hypertrophy-focused training conflicts with boxing performance. Muscle that doesn't translate to speed and endurance is dead weight in a fight.</div>
+    </div>
+    <div class="avoid-card">
+      <div class="avoid-title">Skipping rest day</div>
+      <div class="avoid-desc">Adaptation happens during rest, not during training. Skipping Sunday doesn't make you tougher — it just makes you slower and more prone to injury.</div>
+    </div>
+    <div class="avoid-card">
+      <div class="avoid-title">Speed before technique</div>
+      <div class="avoid-desc">Fast, wrong punching builds bad habits that are very hard to unlearn. Slow, correct, deliberate — let speed come naturally as form becomes automatic.</div>
+    </div>
+    <div class="avoid-card">
+      <div class="avoid-title">Dehydration during training</div>
+      <div class="avoid-desc">Even 2% dehydration reduces punch speed, reaction time, and power output. Drink before you're thirsty — thirst means you're already behind.</div>
+    </div>
+    <div class="avoid-card">
+      <div class="avoid-title">Neglecting legs</div>
+      <div class="avoid-desc">Power starts from the ground. Weak legs = weak punches, slow movement, poor balance. Fighters who ignore leg training plateau quickly.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ── TIPS ── -->
+<section id="tips" style="background: var(--surface); max-width:none; padding: 100px 0;">
+  <div style="max-width:1200px;margin:0 auto;padding:0 40px;">
+    <div class="section-label reveal">06 — Wisdom</div>
+    <h2 class="section-title reveal">TIPS &<br>TRICKS</h2>
+    <div class="tips-list reveal">
+      <div class="tip-row-card">
+        <div class="tip-index">01</div>
+        <div class="tip-content">
+          <div class="tip-title">Record yourself shadowboxing</div>
+          <div class="tip-body">Your guard drops, your chin rises, your hips don't rotate — you can't feel these things, but a phone camera shows them instantly. Record weekly and compare.</div>
+        </div>
+      </div>
+      <div class="tip-row-card">
+        <div class="tip-index">02</div>
+        <div class="tip-content">
+          <div class="tip-title">Round format as conditioning</div>
+          <div class="tip-body">Stop thinking of rest as weakness. The 60–90 sec rest between rounds is the training stimulus — it forces your body to recover quickly, which is exactly what fighting demands.</div>
+        </div>
+      </div>
+      <div class="tip-row-card">
+        <div class="tip-index">03</div>
+        <div class="tip-content">
+          <div class="tip-title">The jab is your most important punch</div>
+          <div class="tip-body">It sets distance, creates openings, disrupts rhythm, and accumulates damage. Every world-class fighter has an excellent jab. Spend 40% of your boxing practice on this one punch.</div>
+        </div>
+      </div>
+      <div class="tip-row-card">
+        <div class="tip-index">04</div>
+        <div class="tip-content">
+          <div class="tip-title">Sleep is the most anabolic thing you can do</div>
+          <div class="tip-body">7–8 hours is not optional. During sleep: testosterone peaks, growth hormone pulses, muscle tissue repairs, and motor skills from training consolidate. Cutting sleep cuts results.</div>
+        </div>
+      </div>
+      <div class="tip-row-card">
+        <div class="tip-index">05</div>
+        <div class="tip-content">
+          <div class="tip-title">Footwork first, power second</div>
+          <div class="tip-body">Every great punch starts with correct positioning. If you're out of range or off-angle, no power in the world helps. Spend as much time on footwork as on punching — you'll be glad you did.</div>
+        </div>
+      </div>
+      <div class="tip-row-card">
+        <div class="tip-index">06</div>
+        <div class="tip-content">
+          <div class="tip-title">Track your rounds, not just your reps</div>
+          <div class="tip-body">Progress in boxing is measured in rounds completed at high quality, not reps on paper. If you got through 5 clean shadowboxing rounds today vs 3 last week, you improved — celebrate that.</div>
+        </div>
+      </div>
+      <div class="tip-row-card">
+        <div class="tip-index">07</div>
+        <div class="tip-content">
+          <div class="tip-title">Breathe out on every punch</div>
+          <div class="tip-body">Exhaling sharply on every strike tightens your core, protects against body shots, and prevents gassing out. It feels mechanical at first — after a month it becomes automatic.</div>
+        </div>
+      </div>
+      <div class="tip-row-card">
+        <div class="tip-index">08</div>
+        <div class="tip-content">
+          <div class="tip-title">Relax between exchanges</div>
+          <div class="tip-body">Tense fighters gas out in round 2. Tension burns energy; relaxation conserves it. Shake your hands between combinations, drop your shoulders, breathe. Explosiveness comes from sudden tension, not sustained tension.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── 6 MONTHS TIMELINE ── -->
+<section id="timeline">
+  <div class="section-label reveal">07 — The Journey</div>
+  <h2 class="section-title reveal">6 MONTH<br>ROADMAP</h2>
+
+  <div class="timeline reveal">
+    <div class="timeline-spine"></div>
+
+    <div class="timeline-month">
+      <div class="timeline-dot"></div>
+      <div class="timeline-mo">Month 1</div>
+      <div class="timeline-title">Foundation & Form</div>
+      <div class="timeline-body">Build the habits. Master the stance, guard, and the jab. Your body is adapting — don't push too hard yet. Focus on technique, not intensity. Add the missing pull exercise immediately.</div>
+      <div class="timeline-goals">
+        <span class="timeline-goal">Orthodox stance locked in</span>
+        <span class="timeline-goal">Consistent jab mechanics</span>
+        <span class="timeline-goal">5 rounds of shadowboxing</span>
+        <span class="timeline-goal">Add pullups/rows</span>
+        <span class="timeline-goal">Jump rope 5 min daily</span>
+      </div>
+    </div>
+
+    <div class="timeline-month">
+      <div class="timeline-dot"></div>
+      <div class="timeline-mo">Month 2</div>
+      <div class="timeline-title">Combinations & Cardio</div>
+      <div class="timeline-body">Introduce the 1-2 combination with fluency. Begin running 2–3x per week. Your stamina should noticeably improve. Increase plank to 60 seconds. Upgrade sit-ups to Russian twists.</div>
+      <div class="timeline-goals">
+        <span class="timeline-goal">1-2 combo fluid</span>
+        <span class="timeline-goal">Running 3x/week</span>
+        <span class="timeline-goal">Plank 60 seconds</span>
+        <span class="timeline-goal">Visible upper body changes</span>
+      </div>
+    </div>
+
+    <div class="timeline-month">
+      <div class="timeline-dot"></div>
+      <div class="timeline-mo">Month 3</div>
+      <div class="timeline-title">Power & Defence</div>
+      <div class="timeline-body">Introduce the hook. Work on slipping and rolling as second nature. Add sprint intervals to conditioning. Your physique is recomposing — leaner face, better posture, visible shoulder definition.</div>
+      <div class="timeline-goals">
+        <span class="timeline-goal">1-2-3 combinations</span>
+        <span class="timeline-goal">Sprint intervals added</span>
+        <span class="timeline-goal">Slips and rolls natural</span>
+        <span class="timeline-goal">Leaner physique visible</span>
+      </div>
+    </div>
+
+    <div class="timeline-month">
+      <div class="timeline-dot"></div>
+      <div class="timeline-mo">Month 4</div>
+      <div class="timeline-title">Speed Development</div>
+      <div class="timeline-body">Same technique, faster execution. You've built the neural pathways — now sharpen them. Jump squats replace regular squats. Bicycle crunches replace sit-ups fully. Explosive pushups added.</div>
+      <div class="timeline-goals">
+        <span class="timeline-goal">Noticeably faster punches</span>
+        <span class="timeline-goal">Jump squats mastered</span>
+        <span class="timeline-goal">Explosive pushups</span>
+        <span class="timeline-goal">Footwork automatic</span>
+      </div>
+    </div>
+
+    <div class="timeline-month">
+      <div class="timeline-dot"></div>
+      <div class="timeline-mo">Month 5</div>
+      <div class="timeline-title">Fight Conditioning</div>
+      <div class="timeline-body">Full 3-minute rounds at close to fight pace. Your boxing has become a real skill, not just exercise. Upper abs visible. Stamina to sustain boxing rounds without significant fatigue. Uppercut introduced.</div>
+      <div class="timeline-goals">
+        <span class="timeline-goal">5 rounds at fight pace</span>
+        <span class="timeline-goal">Uppercut in combinations</span>
+        <span class="timeline-goal">Upper abs visible</span>
+        <span class="timeline-goal">High fight stamina</span>
+      </div>
+    </div>
+
+    <div class="timeline-month">
+      <div class="timeline-dot"></div>
+      <div class="timeline-mo">Month 6</div>
+      <div class="timeline-title">Athletic Fighter</div>
+      <div class="timeline-body">The goal. You are now a legitimately dangerous athletic fighter type. Lean, fast, strong, technical. Sparring readiness if desired. The physique and capability you wanted when you started are now real.</div>
+      <div class="timeline-goals">
+        <span class="timeline-goal">Lean athletic physique</span>
+        <span class="timeline-goal">Real boxing skill</span>
+        <span class="timeline-goal">High explosive stamina</span>
+        <span class="timeline-goal">Sparring-ready</span>
+        <span class="timeline-goal">Visible abs + shoulders</span>
+        <span class="timeline-goal">Elite confidence</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">FIGHTER BLUEPRINT</div>
+  <p>Consistency over intensity · Skill over size · Recovery over destruction</p>
+</footer>
+
+<script>
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  reveals.forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
